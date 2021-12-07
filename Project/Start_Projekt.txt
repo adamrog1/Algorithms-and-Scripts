@@ -1,0 +1,86 @@
+@echo off
+setlocal enabledelayedexpansion
+
+:main
+	set inputFile=dane.txt
+	set outputFile=wyjscie.html
+	cls
+	call :tytul
+	call :opcje
+	set /p input=">> "
+	if !input!==1(
+		call :info
+	)
+	else if !input!==2(
+		call :compute
+	)
+	else if !input!==3(
+		call :backup
+	)
+	else if !input!==4(
+		call :exit
+	)
+
+:tytul
+	echo Adam Rogalski - projekt "Drapieżnik-Ofiara"
+	goto:eof
+	
+:opcje
+	echo	1. Informacje ogólne
+	echo	2. Wykonaj program
+	echo	3. Wykonaj kopie danych
+	echo	4. Wyjdź
+	
+:info
+	cls
+	echo Program rozwiązuje następujący problem:
+	echo	Na płaszczyźnie, w punkcie 𝑃𝑑 znajduje się drapieżnik, który w chwili 𝑡0 (możemy
+	echo przyjąć, że 𝑡0 = 0) dostrzegł ofiarę znajdującą się w punkcie 𝑃𝑜 i w tej samej chwili rozpoczął
+	echo jej pościg z prędkością 𝑣𝑑. Ofiara, również w tej samej chwili, rozpoczyna ucieczkę po
+	echo pewnej prostej 𝑙𝑜 z prędkością 𝑣𝑜. Co pewien stały krok czasu Δ𝑡, drapieżnik spogląda,
+	echo w którym miejscu znajduje się ofiara i koryguje swą trasę pościgu (drapieżnik również
+	echo biegnie wzdłuż prostej, jednak po każdej korekcie, prosta ta może ulec zmianie).
+	echo Napisz program, który po zadaniu współrzędnych punktów 𝑃𝑑 i 𝑃𝑜, prędkości 𝑣𝑑 i 𝑣𝑜,
+	echo parametrów prostej 𝑙0 oraz Δ𝑡, zwróci krzywe, po których biegną drapieżnik i ofiara (trasa
+	echo ucieczki ofiary jest prostą, a trasa pogoni – łamaną). Warunkiem zakończenia pościgu jest
+	echo spełnienie jednego z warunków: dogonienie ofiary lub zmęczenie się drapieżnika, co dzieje
+	echo się po upływie pewnego zadanego czasu 𝑡 (kolejny argument programu).
+	echo W drugiej części rozbuduj program w taki sposób, aby ofiara, również co Δ𝑡,
+	echo korygowała trasę ucieczki, tak aby biec w kierunku najkorzystniejszym dla uciekającej ofiary
+	echo (wówczas obydwie trasy będą łamanymi i nie trzeba zadawać parametrów prostej 𝑙𝑜).
+	echo .
+	echo Nacisnij ENTER aby wrocic do menu
+	pause>NUL
+	goto :main
+:compute
+	if not exist !inputFile!(
+		echo Nie moge znalezc pliku z danymi wejsciowymi
+		pause > NUL
+		goto :main
+	)
+	kod.py !inputFile! !outputFile!
+	echo .
+	!outputFile!
+	echo Operacja zakonczona, obliczenia wykonane.
+	echo Wcisnij ENTER, aby wrócić z do menu
+	pause >NUL
+	goto :main
+:backup
+	set imie=backup
+	if exist backup(
+	echo Backup już istnieje, przenieś lub usuń go aby kontynuowac
+	echo Wciśnij ENTER, ay wrócić do menu
+	pause > NUL
+	goto :main
+	)
+	mkdir !name!
+	if exist !inputFile! copy !inputFile! !name!
+	if exist !outputFile! copy !outputFile! !name!
+	if exist style.css copy style.css !name!
+	echo.
+	echo Kopia zapasowa znajduje sie w folderze !name!
+	echo Wciśnij ENTER, aby wrócić do menu
+	pause > NUL
+	goto :main
+:exit
+	exit 0
